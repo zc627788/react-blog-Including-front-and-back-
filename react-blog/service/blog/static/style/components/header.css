@@ -1,0 +1,51 @@
+.header{
+    /* background-color: #fff; */
+    padding: .4rem;
+    overflow: hidden;
+    height: 3.2rem;
+    border-bottom:1px solid #eee;
+
+}
+.header-logo{
+    color:#1e90ff;
+    font-size: 1.4rem;
+    text-align: left;
+}
+.header-txt{
+    font-size: 0.6rem;
+    color: #fff;
+    display: inline-block;
+    padding-left: 0.3rem;
+}
+.ant-meu{
+    line-height: 2.8rem;
+}
+.ant-menu-item{
+    font-size:1rem !important;
+    padding-left:1rem;
+    padding-right:1rem;
+}
+.switch{
+    position: absolute;
+    right: 0;
+    top: 10px;
+}
+.tabFlex{
+    display: flex;
+    height: 30px;
+}
+.tabFlex .tabs{
+   flex: 2;
+   padding-left: 43px;
+
+}
+.tabFlex span{
+    padding-top: 13px;
+    padding-left: 3px;
+
+   flex: 1;
+
+}
+.memu-div ul{
+   background-color:rgba(52, 52, 52, 0.5);
+}

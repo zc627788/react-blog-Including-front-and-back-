@@ -1,0 +1,27 @@
+{
+    "name": "blog",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start"
+    },
+    "dependencies": {
+        "@zeit/next-css": "^1.0.1",
+        "antd": "^3.26.6",
+        "axios": "^0.19.1",
+        "babel-plugin-import": "^1.13.0",
+        "bootstrap": "3.3.7",
+        "hexo-helper-live2d": "^3.1.1",
+        "highlight.js": "^9.17.1",
+        "lodash": "^4.17.20",
+        "marked": "^0.8.0",
+        "next": "9.1.7",
+        "react": "^16.12.0",
+        "react-dom": "16.12.0",
+        "react-particles-js": "^3.4.1",
+        "react-sticky": "^6.0.3",
+        "react-tsparticles": "^1.18.11"
+    }
+}
