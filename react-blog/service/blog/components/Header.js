@@ -98,8 +98,11 @@ const Header = (props) => {
     const handleClick = (e) => {
         if (e.key == 0) {
             Router.push('/index')
-        } else {
+        } else if (e.key == 1) {
             Router.push('/list2?id=' + e.key)
+        } else {
+            Router.push('/messageBoard')
+
         }
     }
     const changeTheme = value => {
@@ -136,7 +139,7 @@ const Header = (props) => {
                         placeholder="搜索,如: react, vue, node"/*  */
                         onSearch={onSearch}
                         enterButton
-                        style={{ width: 200, height: 30, marginTop: 3, display: isDetail === '/detailed' ? 'none' : '' }}
+                        style={{ width: 200, height: 30, marginTop: 3, display: isDetail === '/detailed' || isDetail === '/messageBoard' ? 'none' : '' }}
                     />
                 </Col>
 
