@@ -18,7 +18,7 @@ class HomeController extends Controller {
             "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime," +
             'article.view_count as view_count ,' +
             '.type.typeName as typeName ' +
-            'FROM article LEFT JOIN type ON article.type_id = type.Id';
+            'FROM article LEFT JOIN type ON article.type_id = type.Id order by addTime  DESC';
         const results = await this.app.mysql.query(sql);
         this.ctx.body = {
             data: results,
@@ -128,26 +128,26 @@ class HomeController extends Controller {
     }
 
     //插入留言
-    async sendMessages(){
-        const {username,content}=this.ctx.request.body
+    async sendMessages() {
+        const { username, content } = this.ctx.request.body
         let insertObj = {
             createTime: Date.now(),
             content: `'${content}'` || '',
-            userIsAdmin:  1,
+            userIsAdmin: 1,
             userName: `'${username}'`,
-            userAvatar: `'${'http://localhost:8888/public/images/default.png'}'`
+            userAvatar: `'https://ui-avatars.com/api/?name=${username}'`
         }
         const sql = `insert into messages (${Object.keys(insertObj).join(',')}) values (${Object.values(insertObj).join(',')})`
         const res = await this.app.mysql.query(sql)
         if (res.affectedRows) {
-            this.ctx.body={
+            this.ctx.body = {
                 data: {
                     id: res.insertId
                 },
                 message: '新增成功'
             }
         } else {
-            this.ctx.body={
+            this.ctx.body = {
                 message: '新增失败'
             }
         }

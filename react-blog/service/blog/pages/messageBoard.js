@@ -93,11 +93,11 @@ const messageBoard = (list = []) => {
         })
     }
     //留言用户Input的onChange
-    const handleUsernameChange=(yourName)=>{
-        const {value} = yourName.target
+    const handleUsernameChange = (yourName) => {
+        const { value } = yourName.target
         setState({
             ...state,
-            replyUser:value
+            replyUser: value
         })
     }
 
@@ -109,27 +109,19 @@ const messageBoard = (list = []) => {
         })
     }
 
-    //清空留言框
+    //关闭留言框 清空留言框
     const clearContent = () => {
         setState({
             ...state,
+            isShowEditor: false,
             editorState: ContentUtils.clear(state.editorState)
         })
     }
 
-    //关闭留言框
-    const closeMessage = () => {
-        setState({
-            ...state,
-            isShowEditor: false
-        })
-        clearContent()
-    }
-
     // 留言
     const sendMessage = async () => {
-        const {editorState,replyUser }=state
-        if(!replyUser){
+        const { editorState, replyUser } = state
+        if (!replyUser) {
             message.warning('请输入用户名')
             return
         }
@@ -140,10 +132,11 @@ const messageBoard = (list = []) => {
         const htmlContent = state.editorState.toHTML()
         console.log(222, htmlContent)
         const res = await axios.post(`${servicePath.sendMessage}`, {
-            username:state.replyUser,
+            username: state.replyUser,
             content: htmlContent
         })
-        if (res.status === 0) {
+        console.log('res', res)
+        if (res.status === 200) {
             message.success('留言成功')
             clearContent()
             getMessages()
@@ -201,6 +194,10 @@ const messageBoard = (list = []) => {
                 })
             }
         }
+    }
+    // 随机颜色
+    const getRandomColor = function () {
+        return '#' + Math.floor(Math.random() * 16777215).toString(16);
     }
 
     //删除回复
@@ -268,7 +265,7 @@ const messageBoard = (list = []) => {
                 </Tooltip>
             </span>
         ]
-        //只有管理员或者本人才可删除
+        //只有小可爱或者本人才可删除
         // if (props.user.isAdmin || props.user.id === item.userId) {
         //     actions.splice(2, 0, (
         //         <span style={styles.actionItem}>
@@ -286,7 +283,7 @@ const messageBoard = (list = []) => {
     const myUploadFn = async (param) => {
         const formData = new FormData();
         formData.append('file', param.file);
-        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/upload`, {
+        const res = await axios(`${process.env.REACT_APP_BASE_URL}/upload`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${isAuthenticated()}`,
@@ -335,7 +332,7 @@ const messageBoard = (list = []) => {
                                                     placeholder="请输入你的用户名"
                                                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                     suffix={
-                                                        <Tooltip title="Extra information">
+                                                        <Tooltip title="必须输入">
                                                             <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
                                                         </Tooltip>
                                                     }
@@ -350,20 +347,19 @@ const messageBoard = (list = []) => {
                                                 />
                                             </div>
                                             <Button type='primary' onClick={sendMessage}>发表</Button>&emsp;
-                                            <Button onClick={closeMessage}>取消</Button>
+                                            <Button onClick={clearContent}>取消</Button>
                                         </div>
                                     ) : <Button onClick={() => setState({ ...state, isShowEditor: true })}>我要留言</Button>
                                 }
                             </div>
                             <Divider />
                             <Spin spinning={state.loading} style={{ position: 'fixed', top: '50%', left: '50%' }} />
-                            {console.log('state.messages', state.messages)}
                             <div className='message-list-box'>
                                 {
                                     Array.isArray(state.messages) && state.messages.map((item, index) => (
                                         <Comment
                                             key={item.id}
-                                            author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
+                                            author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>}</span>}
                                             avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
                                             content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
                                             actions={renderActions(item, item.id)}
@@ -372,7 +368,7 @@ const messageBoard = (list = []) => {
                                             {item.children.slice(0, state.expandIds.includes(item.id) ? item.children.length : 1).map(i => (
                                                 <Comment
                                                     key={i.id}
-                                                    author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
+                                                    author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>}</span>}
                                                     avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
                                                     content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
                                                     actions={renderActions(i, item.id)}

@@ -16,6 +16,7 @@ const Header = (props) => {
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isDetail, setIsDetail] = useState('')
+    const [content, setContent] = useState('')
 
     const checkLogin = () => {
         setIsLoading(true)
@@ -110,6 +111,7 @@ const Header = (props) => {
     };
 
     const onSearch = (value) => {
+        setContent(value)
         const a = async (value) => {
             await axios(servicePath.getListSearch + value).then(
                 (res) => { props.searchData(res.data) }
@@ -117,6 +119,7 @@ const Header = (props) => {
             )
         }
         a(value)
+        setContent('')
     }
 
 
@@ -138,6 +141,8 @@ const Header = (props) => {
                     <Search
                         placeholder="搜索,如: react, vue, node"/*  */
                         onSearch={onSearch}
+                        onChange={(e) => { setContent(e.target.value) }}
+                        value={content}
                         enterButton
                         style={{ width: 200, height: 30, marginTop: 3, display: isDetail === '/detailed' || isDetail === '/messageBoard' ? 'none' : '' }}
                     />
