@@ -90,6 +90,68 @@ class HomeController extends Controller {
         const result = await this.app.mysql.query(sql);
         this.ctx.body = { data: result };
     }
+
+    /**
+ * 获取留言列表
+ */
+    async getMessages(query) {
+        const { current = 0, pageSize = 10 } = query
+        // 获取留言信息
+        const sqlMsg = `select SQL_CALC_FOUND_ROWS * from messages where pid=-1 order by createTime DESC limit ${current * pageSize},${pageSize}`
+        const resMsg = await this.app.mysql.query(sqlMsg)
+
+        // 获取总留言数
+        const sqlTotal = 'select found_rows() as total'
+        const resTotal = await this.app.mysql.query(sqlTotal)
+
+        // 获取对应页的回复数据
+        const pids = Array.isArray(resMsg) ? resMsg.map(i => i.id) : []
+        let resReply = []
+        if (pids.length) {
+            const sqlReply = `select * from messages where pid in (${pids.join(',')}) order by createTime`
+            resReply = await this.app.mysql.query(sqlReply)
+        }
+
+        const list = resMsg.map(item => {
+            const children = resReply.filter(i => i.pid === item.id)
+            return {
+                ...item,
+                children
+            }
+        })
+        this.ctx.body = {
+            list,
+            current: parseInt(current),
+            pageSize: parseInt(pageSize),
+            total: resTotal[0].total,
+        }
+    }
+
+    //插入留言
+    async sendMessages(){
+        const {username,content}=this.ctx.request.body
+        let insertObj = {
+            createTime: Date.now(),
+            content: `'${content}'` || '',
+            userIsAdmin:  1,
+            userName: `'${username}'`,
+            userAvatar: `'${'http://localhost:8888/public/images/default.png'}'`
+        }
+        const sql = `insert into messages (${Object.keys(insertObj).join(',')}) values (${Object.values(insertObj).join(',')})`
+        const res = await this.app.mysql.query(sql)
+        if (res.affectedRows) {
+            this.ctx.body={
+                data: {
+                    id: res.insertId
+                },
+                message: '新增成功'
+            }
+        } else {
+            this.ctx.body={
+                message: '新增失败'
+            }
+        }
+    }
 }
 
 

@@ -8,6 +8,12 @@ module.exports = app => {
     router.get('/default/getListById/:id', controller.default.home.getListById);
     router.get('/default/getListSearch/:context', controller.default.home.getListSearch);
     router.get('/default/giveGood/:id/:praise', controller.default.home.giveGood);
+    router.get('/default/giveGood/:id/:praise', controller.default.home.giveGood);
+    router.get('/default/message/:current/:pageSize', controller.default.home.getMessages);
+    router.post('/default/sendMessage', controller.default.home.sendMessages);
+
+
+
 
 
 };

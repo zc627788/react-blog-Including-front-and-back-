@@ -43,6 +43,7 @@ const Home = (list) => {
     const [mylist, setMylist] = useState(list.data);
     const [tabLeft, setTabLeft] = useState("最新文章");
     const [buttonType, setButtonType] = useState("");
+    const [state,setState]=useState({a:1,b:2,c:3})
 
 
     // function
@@ -60,6 +61,7 @@ const Home = (list) => {
         }
         setMylist(orderBy(list?.data, [tab], ['desc']))
         setTabLeft(tabs[tab])
+        setState({...state,a:2})
 
     }
     const changType = (e) => {
@@ -169,6 +171,7 @@ const Home = (list) => {
             <Head>
                 <title>Home</title>
             </Head>
+ 
             <Header searchData={(data) => searchData(data)} />
             <Carousel effect="fade" autoplay >
                 <div className="Carousel">
