@@ -168,6 +168,11 @@ const Home = (list) => {
             size: "cover"
         }
     }
+    const tabs = {
+        "addTime": "最新文章",
+        "praise": "最受欢迎",
+        "commentCount": "评论最多"
+    }
 
 
     // function
@@ -176,25 +181,30 @@ const Home = (list) => {
         setMylist(search?.data)
     }
 
+    function findKey(obj, value, compare = (a, b) => a === b) {
+        return Object.keys(obj).find(k => compare(obj[k], value))
+    }
+
     // tabs栏切换
-    const tabsChange = (tab) => {
-        const tabs = {
-            "addTime": "最新文章",
-            "praise": "最受欢迎",
-            "commentCount": "评论最多"
-        }
-        setMylist(orderBy(list?.data, [tab], ['desc']))
+    const tabsChange = async (tab) => {
+        const res = await axios(`${servicePath.getArticleList}${tab}`)
+        setMylist(res.data.data)
         setTabLeft(tabs[tab])
 
+
     }
+    // 点赞
     const changType = (e) => {
         const { id, praise } = e.target.value
+        if (!praise) {
+            return
+        }
         const giveGood = async (id, praise) => {
             await axios(`${servicePath.giveGood}${id}/${praise}`).then(
                 (res) => { console.log('res', res) }
 
             )
-            await axios(servicePath.getArticleList).then(
+            await axios(servicePath.getArticleList + findKey(tabs, tabLeft)).then(
                 (res) => {
                     setMylist(res.data.data)
                 }
@@ -293,15 +303,8 @@ const Home = (list) => {
 }
 
 Home.getInitialProps = async () => {
-    const promise = new Promise((resolve) => {
-        axios(servicePath.getArticleList).then(
-            (res) => {
-                resolve(res.data)
-            }
-        )
-    })
-
-    return await promise
+    const res = await axios(servicePath.getArticleList + 'addTime')
+    return res.data
 }
 
 

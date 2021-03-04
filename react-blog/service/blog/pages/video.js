@@ -14,6 +14,8 @@ const { TabPane } = Tabs;
 
 const video = (list) => {
     // state
+    const [mylist, setMylist] = useState(list.data);
+    const [tabLeft, setTabLeft] = useState("最新文章");
     const config = {
         fpsLimit: 60,
         particles: {
@@ -146,12 +148,21 @@ const video = (list) => {
             }
         }
     }
+    const tabs = {
+        addTime: "最新文章",
+        praise: "最受欢迎",
+        commentCount: "评论最多"
+    }
 
     // effect
-    const [mylist, setMylist] = useState(list.data);
     useEffect(() => {
         setMylist(list.data)
     }, [])
+
+    function findKey(obj, value, compare = (a, b) => a === b) {
+        return Object.keys(obj).find(k => compare(obj[k], value))
+    }
+
 
     // function
     // 搜索
@@ -159,6 +170,30 @@ const video = (list) => {
         setMylist(search?.data)
     }
 
+    // tabs栏切换
+    const tabsChange = async (tab) => {
+        let id = window.location.search.split('=')[1]
+        const res = await axios(`${servicePath.getListById}${id}/${tab}`)
+        setMylist(res.data.data)
+        setTabLeft(tabs[tab])
+
+    }
+    // 点赞
+    const changType = (e) => {
+        const { id, praise } = e.target.value
+        let type_id = window.location.search.split('=')[1]
+        if (!praise) {
+            return
+        }
+        const giveGood = async (id, praise) => {
+            await axios(`${servicePath.giveGood}${id}/${praise}`)
+            const res = await axios(`${servicePath.getListById}${type_id}/${findKey(tabs, tabLeft)}`)
+            setMylist(res.data.data)
+        }
+        giveGood(id, praise)
+
+
+    }
     return (
         <>
             <Head>
@@ -184,12 +219,12 @@ const video = (list) => {
                                             <Breadcrumb.Item style={{ color: '#fff' }}>视频教程</Breadcrumb.Item>
                                         </Breadcrumb>
                                     </span>
-                                    <Tabs defaultActiveKey="1" className="Tabs" style={{ color: '#fff' }} >
-                                        <TabPane tab="最新" key="1" >
+                                    <Tabs defaultActiveKey="1" className="Tabs" style={{ color: '#fff' }} onChange={tabsChange} >
+                                        <TabPane tab="最新" key="addTime" >
                                         </TabPane>
-                                        <TabPane tab="最受欢迎" key="2">
+                                        <TabPane tab="最受欢迎" key="praise">
                                         </TabPane>
-                                        <TabPane tab="最多观看" key="3">
+                                        <TabPane tab="最多观看" key="commentCount">
                                         </TabPane>
                                     </Tabs>
                                 </div>
@@ -208,9 +243,9 @@ const video = (list) => {
                                         <span><Icon type="fire" />  {item.view_count}人</span>
                                     </div>
                                     <div className="list-context">{item.introduce}</div>
-                                    <Radio.Group style={{ margin: "10px 0 0 10px" }}>
-                                        <Radio.Button value="a"><Icon type="like" />&nbsp;{item.praise}</Radio.Button>
-                                        <Radio.Button value="b"><Icon type="message" /> &nbsp;{item.commentCount}</Radio.Button>
+                                    <Radio.Group style={{ margin: "10px 0 0 10px" }} onChange={changType}>
+                                        <Radio.Button value={item}><Icon type="like" />&nbsp;{item.praise}</Radio.Button>
+                                        <Radio.Button value={item.commentCount}><Icon type="message" /> &nbsp;{item.commentCount}</Radio.Button>
                                     </Radio.Group>
                                 </List.Item>
                             )}
@@ -233,12 +268,8 @@ const video = (list) => {
 
 video.getInitialProps = async (context) => {
     let id = context.query.id
-    const promise = new Promise((resolve) => {
-        axios(servicePath.getListById + id).then(
-            (res) => resolve(res.data)
-        )
-    })
-    return await promise
+    const res = await axios(servicePath.getListById + id + '/' + 'addTime')
+    return res.data
 }
 
 export default video

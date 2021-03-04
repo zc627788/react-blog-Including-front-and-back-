@@ -9,7 +9,7 @@ class HomeController extends Controller {
     }
 
     async getArticleList() {
-
+        const tab = this.ctx.params.tab;
         const sql = 'SELECT article.id as id,' +
             'article.title as title,' +
             'article.introduce as introduce,' +
@@ -18,7 +18,7 @@ class HomeController extends Controller {
             "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime," +
             'article.view_count as view_count ,' +
             '.type.typeName as typeName ' +
-            'FROM article LEFT JOIN type ON article.type_id = type.Id order by addTime  DESC';
+            `FROM article LEFT JOIN type ON article.type_id = type.Id order by ${tab||'addTime'}  DESC`;
         const results = await this.app.mysql.query(sql);
         this.ctx.body = {
             data: results,
@@ -40,7 +40,7 @@ class HomeController extends Controller {
             'type.typeName as typeName ,' +
             'type.id as typeId ' +
             'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
-            'WHERE article.id=' + id;
+            'WHERE article.id=' + id
         const result = await this.app.mysql.query(sql);
         this.ctx.body = { data: result };
     }
@@ -63,10 +63,28 @@ class HomeController extends Controller {
             'article.view_count as view_count ,' +
             'type.typeName as typeName ' +
             'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
-            'WHERE type_id=' + id;
+            'WHERE type_id=' +
+            ` ${id} order by ${this.ctx.params.tab || 'addTime'} DESC`;;
         const result = await this.app.mysql.query(sql);
         this.ctx.body = { data: result };
     }
+    // 视频查询
+    // async  giveGoodVideo() {
+    //     const id = this.ctx.params.id;
+    //     const { id, typeid, praise } = this.ctx.params
+    //     const sql = 'SELECT article.id as id,' +
+    //         'article.title as title,' +
+    //         'article.introduce as introduce,' +
+    //         'article.praise as praise,' +
+    //         'article.commentCount as commentCount,' +
+    //         "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime," +
+    //         'article.view_count as view_count ,' +
+    //         'type.typeName as typeName ' +
+    //         'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
+    //         'WHERE type_id=' +''
+    //     const result = await this.app.mysql.query(sql);
+    //     this.ctx.body = { data: result };
+    // }
     // 查询
     async getListSearch() {
         const context = `%${this.ctx.params.context || ''}%`;
@@ -155,7 +173,7 @@ class HomeController extends Controller {
 
     //回复留言
     async reply() {
-        const { content,type,pid,replyUser } = this.ctx.request.body
+        const { content, type, pid, replyUser } = this.ctx.request.body
         let insertObj = {
             type: type || 0,
             pid: pid || -1,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
-import { Row, Col, List, Icon, Breadcrumb, Tabs, Radio, Comment, Divider, Button, Card, message, Tooltip, Input, Modal, notification, Tag, Spin, Pagination } from 'antd'
+import { Row, Col, Icon, Breadcrumb, Comment, Divider, Button, Card, message, Tooltip, Input, notification, Tag, Spin, Pagination } from 'antd'
 import moment from 'moment'
 import BraftEditor from 'braft-editor'
 
@@ -13,13 +13,9 @@ import Header from '../components/Header'
 import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
-// import '../static/style/pages/messageBoard.less' 
 import axios from 'axios'
 import servicePath from '../config/apiUrl'
 import Particles from "react-tsparticles";
-import Link from 'next/link'
-const { TabPane } = Tabs;
-import dynamic from 'next/dynamic';
 
 
 BraftEditor.use(CodeHighlighter({}))
@@ -58,7 +54,7 @@ const messageBoard = (list = []) => {
     })
 
     const controls = ['undo', 'redo', 'clear', 'separator', 'bold', 'text-color', 'blockquote', 'code', 'emoji', 'separator', 'link', 'separator', 'media']
-    const config={
+    const config = {
         fpsLimit: 60,
         background: {
             color: "#0b032d"

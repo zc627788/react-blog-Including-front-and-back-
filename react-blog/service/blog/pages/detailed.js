@@ -51,14 +51,10 @@ const Detailed = (props) => {
     const [comments, setComments] = useState([{}])
     const [submitting, setSubmitting] = useState(false)
     const [value, setValue] = useState('')
-
-
     const tocify = new Tocify()
     const renderer = new marked.Renderer();
 
-
-
-
+    // function
     const handleSubmit = () => {
         if (!value) {
             return;
@@ -105,13 +101,8 @@ const Detailed = (props) => {
     let html = marked(article_content)
 
 
-
-
-
-
     return (
         <>
-                  
             <Head>
                 <title>博客详细页</title>
             </Head>
@@ -190,16 +181,8 @@ const Detailed = (props) => {
 
 Detailed.getInitialProps = async (context) => {
     let id = context.query.id
-    const promise = new Promise((resolve) => {
-
-        axios(servicePath.getArticleById + id).then(
-            (res) => {
-                resolve(res.data.data[0])
-            }
-        )
-    })
-
-    return await promise
+    const res = await axios(servicePath.getArticleById + id)
+    return res.data.data[0]
 }
 
 export default Detailed
