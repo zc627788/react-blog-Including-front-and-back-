@@ -1,42 +1,65 @@
-body{
+body {
   background-color: #f6f6f6;
 }
-.comm-left{
-  background-color: #FFF;
-  padding:.3rem;
-  border-radius: .3rem;
-  border:1px solid #eee;
+.comm-left {
+  background-color: #fff;
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  border: 1px solid #eee;
 }
-.comm-box{
-  background-color: #FFF;
-  margin-left: .5rem;
-  padding:.3rem;
-  border-radius: .3rem;
-  border:1px solid #eee;
+.comm-leftList2 {
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  border: 1px solid #eee;
 }
-.comm-main{
-  margin-top: .5rem;
+.comm-leftList2 span {
+  color: #fff;
 }
-.list-title{
-    margin: .5rem 0 1rem 1rem;
-    font-size: 1.4rem;
-    font-weight: 600;
-    line-height: 1.2;
-    color: #2e3135;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.comm-box {
+  background-color: #fff;
+  margin-left: 0.5rem;
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  border: 1px solid #eee;
 }
-.list-context{
-  color:#777;
-  padding:.5rem;
-  text-overflow:ellipsis;
+.comm-boxList2 {
+  margin-left: 0.5rem;
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  border: 1px solid #eee;
 }
-.list-icon{
-  padding:.5rem 0;
-  color:#AAA;
+.comm-rightList2 .comm-box{
+  background-color:transparent!important;
+  margin-left: 0.5rem;
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  border: 1px solid #eee;
 }
-.list-icon span{
+.comm-main {
+  margin-top: 0.5rem;
+  /* display: block; */
+  height: 10%;
+}
+.list-title {
+  margin: 0.5rem 0 1rem 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #2e3135;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-context {
+  color: #777;
+  padding: 0.5rem;
+  text-overflow: ellipsis;
+}
+.list-icon {
+  padding: 0.5rem 0;
+  color: #aaa;
+}
+.list-icon span {
   display: inline-block;
   padding: 0 10px;
 }

@@ -7,7 +7,7 @@ const Author = () => {
             <div> <Avatar size={100} /></div>
             <div className="author-introduction">
                 ZZC程序员，毕业设计呀!!!!!!!!
-                <Divider>社交账号</Divider>
+                <Divider style={{color:'#fff'}}>社交账号</Divider>
                 <Tooltip title="zc627788">
                     <Avatar size={28} icon="github" className="account" >
 

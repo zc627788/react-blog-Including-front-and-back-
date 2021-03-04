@@ -111,6 +111,7 @@ const Detailed = (props) => {
 
     return (
         <>
+                  
             <Head>
                 <title>博客详细页</title>
             </Head>

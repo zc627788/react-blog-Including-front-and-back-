@@ -152,6 +152,39 @@ class HomeController extends Controller {
             }
         }
     }
+
+    //回复留言
+    async reply() {
+        const { content,type,pid,replyUser } = this.ctx.request.body
+        let insertObj = {
+            type: type || 0,
+            pid: pid || -1,
+            createTime: Date.now(),
+            content: `'${content}'` || '',
+            userName: `'${replyUser}'` || '',
+            userAvatar: `'https://ui-avatars.com/api/?name=${replyUser}'`
+
+        }
+        const sql = `insert into messages (${Object.keys(insertObj).join(',')}) values (${Object.values(insertObj).join(',')})`
+        const res = await this.app.mysql.query(sql)
+        if (res.affectedRows) {
+            this.ctx.body = {
+                data: {
+                    id: res.insertId
+                },
+                message: '新增成功'
+            }
+        } else {
+            this.ctx.body = {
+                message: '新增失败'
+            }
+        }
+    }
+
+
+
+
+
 }
 
 

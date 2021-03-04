@@ -9,7 +9,9 @@ let servicePath = {
     giveGood: ipUrl + 'giveGood/',             // 输入关键字查询文章
     checkLogin: ipUrl + 'checkLogin',          // 检查用户名密码是否正确
     message:ipUrl+'message/',                  // 获取留言
-    sendMessage:ipUrl+'sendMessage'           // 发送留言
+    sendMessage:ipUrl+'sendMessage'  ,         // 发送留言
+    reply:ipUrl+'message/reply'                      // 回复留言
+
 
 
 

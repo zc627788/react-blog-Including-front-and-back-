@@ -100,7 +100,7 @@ const Header = (props) => {
         if (e.key == 0) {
             Router.push('/index')
         } else if (e.key == 1) {
-            Router.push('/list2?id=' + e.key)
+            Router.push('/video?id=' + e.key)
         } else {
             Router.push('/messageBoard')
 

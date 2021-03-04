@@ -11,6 +11,9 @@ module.exports = app => {
     router.get('/default/giveGood/:id/:praise', controller.default.home.giveGood);
     router.get('/default/message/:current/:pageSize', controller.default.home.getMessages);
     router.post('/default/sendMessage', controller.default.home.sendMessages);
+    router.post('/default/message/reply', controller.default.home.reply);
+
+
 
 
 

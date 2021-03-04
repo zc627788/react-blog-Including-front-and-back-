@@ -78,6 +78,11 @@ code {
 }
 .particles{
     position: absolute;
-    height: 141%;
+    height: 195%;
     width: 100%;
 }
+html,body{height:100%}
+.height{
+    height:100%
+}
+

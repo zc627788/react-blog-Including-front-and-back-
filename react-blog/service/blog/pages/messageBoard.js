@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { Row, Col, List, Icon, Breadcrumb, Tabs, Radio, Comment, Divider, Button, Card, message, Tooltip, Input, Modal, notification, Tag, Spin, Pagination } from 'antd'
 import moment from 'moment'
 import BraftEditor from 'braft-editor'
+
 import { ContentUtils } from 'braft-utils'
 import CodeHighlighter from 'braft-extensions/dist/code-highlighter'
 import 'braft-editor/dist/index.css'
@@ -15,8 +16,11 @@ import Footer from '../components/Footer'
 // import '../static/style/pages/messageBoard.less' 
 import axios from 'axios'
 import servicePath from '../config/apiUrl'
+import Particles from "react-tsparticles";
 import Link from 'next/link'
 const { TabPane } = Tabs;
+import dynamic from 'next/dynamic';
+
 
 BraftEditor.use(CodeHighlighter({}))
 
@@ -34,7 +38,6 @@ const styles = {
 
 const messageBoard = (list = []) => {
     // state
-    const [id, setId] = useState('')
     const [state, setState] = useState({
         editorState: BraftEditor.createEditorState(null),   //留言内容
         messages: [],   //留言列表
@@ -55,15 +58,52 @@ const messageBoard = (list = []) => {
     })
 
     const controls = ['undo', 'redo', 'clear', 'separator', 'bold', 'text-color', 'blockquote', 'code', 'emoji', 'separator', 'link', 'separator', 'media']
-
-
+    const config={
+        fpsLimit: 60,
+        background: {
+            color: "#0b032d"
+        },
+        backgroundMode: {
+            enable: true
+        },
+        particles: {
+            color: {
+                value: ["#f67e7d", "#843b62", "#621940"]
+            },
+            links: {
+                color: "#ffb997",
+                enable: true
+            },
+            move: {
+                enable: true,
+                speed: 6
+            },
+            size: {
+                value: 5,
+                random: {
+                    enable: true,
+                    minimumValue: 1
+                },
+                animation: {
+                    enable: true,
+                    speed: 2.5,
+                    minimumValue: 1
+                }
+            },
+            opacity: {
+                value: 0.8,
+                random: {
+                    enable: true,
+                    minimumValue: 0.4
+                }
+            }
+        }
+    }
 
     // effect
     useEffect(() => {
         getMessages()
     }, [])
-
-
 
 
     // function
@@ -73,17 +113,24 @@ const messageBoard = (list = []) => {
             loading: true
         })
         const res = await axios.get(`${servicePath.message}${page - 1}/${pageSize}`)
-        console.log('res', res.data.list)
-        // if (res.status !== 0) {
-        //     setState({...state,
-        //         loading: false,
-        //     })
-        //     return
-        // }
+
+        if (res.status !== 200) {
+            setState({
+                ...state,
+                loading: false,
+            })
+            return
+        }
         setState({
             ...state,
             messages: res.data.list || [],
             loading: false,
+            isShowEditor: false,
+            editorState: ContentUtils.clear(state.editorState),
+            replyPid: '',
+            replyContent: '',
+            replyUser: '',
+            placeholder: '',
             pagination: {
                 ...state.pagination,
                 total: res.data.total,
@@ -109,7 +156,7 @@ const messageBoard = (list = []) => {
         })
     }
 
-    //关闭留言框 清空留言框
+    //取消留言框 清空留言框
     const clearContent = () => {
         setState({
             ...state,
@@ -130,7 +177,6 @@ const messageBoard = (list = []) => {
             return
         }
         const htmlContent = state.editorState.toHTML()
-        console.log(222, htmlContent)
         const res = await axios.post(`${servicePath.sendMessage}`, {
             username: state.replyUser,
             content: htmlContent
@@ -138,8 +184,9 @@ const messageBoard = (list = []) => {
         console.log('res', res)
         if (res.status === 200) {
             message.success('留言成功')
-            clearContent()
             getMessages()
+            clearContent()
+
         }
     }
 
@@ -180,10 +227,10 @@ const messageBoard = (list = []) => {
             content: replyContent,
             type: 1,
             pid: state.replyPid,
-            targetUserId: state.replyUser.userId
+            replyUser: state.replyUser
         }
-        const res = await json.post('/message/create', param)
-        if (res.status === 0) {
+        const res = await axios.post(`${servicePath.reply}`, param)
+        if (res.status === 200) {
             message.success('回复成功')
             closeReply()
             const { current, pageSize } = state.pagination
@@ -201,25 +248,33 @@ const messageBoard = (list = []) => {
     }
 
     //删除回复
-    const onDelete = async (item) => {
-        Modal.confirm({
-            title: '提示',
-            content: `确认删除该留言${item.children && item.children.length ? '及其底下的回复' : ''}吗？`,
-            onOk: async () => {
-                const res = await json.post('/message/delete', {
-                    id: item.id
-                })
-                if (res.status === 0) {
-                    notification.success({
-                        message: '删除成功',
-                        description: res.message,
-                        duration: 3
-                    });
-                    const { current, pageSize } = state.pagination
-                    getMessages(current, pageSize)
-                }
-            },
-        });
+    // const onDelete = async (item) => {
+    //     Modal.confirm({
+    //         title: '提示',
+    //         content: `确认删除该留言${item.children && item.children.length ? '及其底下的回复' : ''}吗？`,
+    //         onOk: async () => {
+    //             const res = await json.post('/message/delete', {
+    //                 id: item.id
+    //             })
+    //             if (res.status === 0) {
+    //                 notification.success({
+    //                     message: '删除成功',
+    //                     description: res.message,
+    //                     duration: 3
+    //                 });
+    //                 const { current, pageSize } = state.pagination
+    //                 getMessages(current, pageSize)
+    //             }
+    //         },
+    //     });
+    // }
+
+    //回复输入框的onChange
+    const handleReplyChange = (e) => {
+        setState({
+            ...state,
+            replyContent: e.target.value
+        })
     }
 
     //折叠回复
@@ -230,6 +285,14 @@ const messageBoard = (list = []) => {
         setState({
             ...state,
             expandIds: list
+        })
+    }
+
+    //展开回复
+    const expandReply = (item) => {
+        setState({
+            ...state,
+            expandIds: [state.expandIds, item.id]
         })
     }
 
@@ -280,26 +343,6 @@ const messageBoard = (list = []) => {
         return actions
     }
 
-    const myUploadFn = async (param) => {
-        const formData = new FormData();
-        formData.append('file', param.file);
-        const res = await axios(`${process.env.REACT_APP_BASE_URL}/upload`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${isAuthenticated()}`,
-            },
-            body: formData
-        }).then(response => response.json())
-
-        if (res.status === 0) {
-            param.success(res.data)
-        } else {
-            param.error({
-                msg: '上传错误'
-            })
-        }
-    }
-
     const pageChange = (page) => {
         getMessages(page, state.pagination.pageSize)
     }
@@ -315,6 +358,12 @@ const messageBoard = (list = []) => {
                 <title>Home</title>
             </Head>
             <Header />
+            <Particles
+                id="tsparticles"
+                className="particles"
+                options={config}
+                style={{ position: "absolute" }}
+            />
             <Row className="comm-main" type="flex" justify="center">
                 <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14}  >
                     <Breadcrumb style={{ margin: '20px 0 0 10px' }}>
@@ -342,7 +391,6 @@ const messageBoard = (list = []) => {
                                                     controls={controls}
                                                     contentStyle={{ height: 210, boxShadow: 'inset 0 1px 3px rgba(0,0,0,.1)' }}
                                                     value={state.editorState}
-                                                    media={{ uploadFn: myUploadFn }}
                                                     onChange={handleMessageChange}
                                                 />
                                             </div>
@@ -385,6 +433,16 @@ const messageBoard = (list = []) => {
                                             </div>
                                             {state.replyPid === item.id && (
                                                 <div style={{ width: '70%', textAlign: 'right' }}>
+                                                    <Input
+                                                        placeholder="请输入你的用户名"
+                                                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                        suffix={
+                                                            <Tooltip title="必须输入">
+                                                                <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                                            </Tooltip>
+                                                        }
+                                                        onChange={handleUsernameChange}
+                                                    />
                                                     <TextArea rows={4} style={{ marginBottom: 10 }} value={state.replyContent} onChange={handleReplyChange} placeholder={state.placeholder} />
                                                     <Button size='small' onClick={closeReply}>取消</Button>&emsp;
                                                     <Button size='small' type='primary' onClick={() => confirmReply(item)}>回复</Button>
@@ -395,9 +453,6 @@ const messageBoard = (list = []) => {
                                 }
                             </div>
                             <Pagination {...state.pagination} onChange={pageChange} onShowSizeChange={pageSizeChange} />
-                            {/* <div className='score-box'>
-                        <Score />
-                    </div> */}
                         </Card>
                     </div>
 
@@ -415,15 +470,5 @@ const messageBoard = (list = []) => {
 
 }
 
-
-// messageBoard.getInitialProps = async (context) => {
-//     let id = context.query.id
-//     const promise = new Promise((resolve) => {
-//         axios(servicePath.getListById + id).then(
-//             (res) => resolve(res.data)
-//         )
-//     })
-//     return await promise
-// }
 
 export default messageBoard
