@@ -92,6 +92,47 @@ class MainController extends Controller {
         const result = await this.app.mysql.query(sql)
         this.ctx.body = { data: result }
     }
+    //获取留言
+    async getMessage() {
+        // 获取留言信息
+        const sqlMsg = `select SQL_CALC_FOUND_ROWS * from messages where pid=-1 order by createTime DESC `
+        const resMsg = await this.app.mysql.query(sqlMsg)
+
+        // 获取总留言数
+        const sqlTotal = 'select found_rows() as total'
+        const resTotal = await this.app.mysql.query(sqlTotal)
+
+        // 获取对应页的回复数据
+        const pids = Array.isArray(resMsg) ? resMsg.map(i => i.id) : []
+        let resReply = []
+        if (pids.length) {
+            const sqlReply = `select * from messages where pid in (${pids.join(',')}) order by createTime`
+            resReply = await this.app.mysql.query(sqlReply)
+        }
+
+        const list = resMsg.map(item => {
+            const children = resReply.filter(i => i.pid === item.id)
+            return {
+                id: item.id,
+                userName: item.userName,
+                createTime: new Date(item.createTime),
+                content: item.content,
+                replyCount: children.length || 0,
+                children
+            }
+        })
+        this.ctx.body = {
+            list,
+            total: resTotal[0].total,
+        }
+    }
+
+    //删除留言
+    async delMessage(query) {
+        let id=this.ctx.params.id
+        const sql = `delete from messages where id=${id}`
+        await this.app.mysql.query(sql)
+    }
 }
 
 module.exports = MainController

@@ -178,6 +178,7 @@ const Home = (list) => {
     // function
     // 搜索
     const searchData = (search) => {
+        console.log('2222', search)
         setMylist(search?.data)
     }
 
@@ -200,18 +201,17 @@ const Home = (list) => {
             return
         }
         const giveGood = async (id, praise) => {
-            await axios(`${servicePath.giveGood}${id}/${praise}`).then(
-                (res) => { console.log('res', res) }
-
-            )
-            await axios(servicePath.getArticleList + findKey(tabs, tabLeft)).then(
-                (res) => {
-                    setMylist(res.data.data)
-                }
-            )
+            await axios(`${servicePath.giveGood}${id}/${praise}`)
         }
+        const mylist2 = JSON.parse(JSON.stringify(mylist))
+        mylist2.map((item) => {
+            if (item.id === id) {
+                item.praise++
+                console.log('item', item)
+            }
+        })
         giveGood(id, praise)
-
+        setMylist(mylist2)
     }
 
 

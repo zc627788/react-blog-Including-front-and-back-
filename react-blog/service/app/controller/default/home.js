@@ -109,9 +109,8 @@ class HomeController extends Controller {
         this.ctx.body = { data: result };
     }
 
-    /**
- * 获取留言列表
- */
+   
+    //获取留言列表
     async getMessages(query) {
         const { current = 0, pageSize = 10 } = query
         // 获取留言信息
@@ -173,13 +172,15 @@ class HomeController extends Controller {
 
     //回复留言
     async reply() {
-        const { content, type, pid, replyUser } = this.ctx.request.body
+        const { content, type, pid, replyUser,targetName } = this.ctx.request.body
+        
         let insertObj = {
             type: type || 0,
             pid: pid || -1,
             createTime: Date.now(),
             content: `'${content}'` || '',
             userName: `'${replyUser}'` || '',
+            targetUserName: `'${targetName}'` || '',
             userAvatar: `'https://ui-avatars.com/api/?name=${replyUser}'`
 
         }
@@ -198,9 +199,6 @@ class HomeController extends Controller {
             }
         }
     }
-
-
-
 
 
 }

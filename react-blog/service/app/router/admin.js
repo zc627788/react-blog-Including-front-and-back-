@@ -9,4 +9,8 @@ module.exports = app => {
     router.get('/admin/getArticleList',adminauth,controller.admin.main.getArticleList)
     router.get('/admin/delArticle/:id',adminauth,controller.admin.main.delArticle)
     router.get('/admin/getArticleById/:id',adminauth,controller.admin.main.getArticleById)
+    router.get('/admin/message',adminauth,controller.admin.main.getMessage)
+    router.get('/admin/delMessage/:id',adminauth,controller.admin.main.delMessage)
+
+
 }

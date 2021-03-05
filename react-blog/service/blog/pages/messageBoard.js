@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
-import { Row, Col, Icon, Breadcrumb, Comment, Divider, Button, Card, message, Tooltip, Input, notification, Tag, Spin, Pagination } from 'antd'
+import { Row, Col, Icon, Breadcrumb, Comment, Divider, Button, Card, message, Tooltip, Input, notification, Tag, Spin, Pagination, Empty } from 'antd'
 import moment from 'moment'
 import BraftEditor from 'braft-editor'
 
@@ -175,7 +175,8 @@ const messageBoard = (list = []) => {
         const htmlContent = state.editorState.toHTML()
         const res = await axios.post(`${servicePath.sendMessage}`, {
             username: state.replyUser,
-            content: htmlContent
+            content: htmlContent,
+ 
         })
         console.log('res', res)
         if (res.status === 200) {
@@ -196,7 +197,7 @@ const messageBoard = (list = []) => {
             ...state,
             replyPid: pid,
             replyContent: '',
-            replyUser: item,
+            // replyUser: item,
             // placeholder: `${props.user.username} @ ${item.userName}`
         })
     }
@@ -214,7 +215,12 @@ const messageBoard = (list = []) => {
 
     //确认回复
     const confirmReply = async (item) => {
-        const replyContent = state.replyContent
+        console.log('item',item.userName)
+        const {replyContent,replyUser} = state
+        if(!replyUser){
+            message.warning('请输入用户名')
+            return
+        }
         if (!replyContent) {
             message.warning('请输入回复内容')
             return
@@ -223,7 +229,8 @@ const messageBoard = (list = []) => {
             content: replyContent,
             type: 1,
             pid: state.replyPid,
-            replyUser: state.replyUser
+            replyUser: state.replyUser,
+            targetName:item.userName
         }
         const res = await axios.post(`${servicePath.reply}`, param)
         if (res.status === 200) {
@@ -398,9 +405,10 @@ const messageBoard = (list = []) => {
                             </div>
                             <Divider />
                             <Spin spinning={state.loading} style={{ position: 'fixed', top: '50%', left: '50%' }} />
+                            {console.log('object', state.messages)}
                             <div className='message-list-box'>
                                 {
-                                    Array.isArray(state.messages) && state.messages.map((item, index) => (
+                                     state.messages&&state.messages.length!==0 ? state.messages.map((item, index) => (
                                         <Comment
                                             key={item.id}
                                             author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>}</span>}
@@ -409,13 +417,14 @@ const messageBoard = (list = []) => {
                                             actions={renderActions(item, item.id)}
                                             datetime={`第${state.pagination.total - (state.pagination.current - 1) * state.pagination.pageSize - index}楼`}
                                         >
+                                            {console.log('object', state.expandIds)}
                                             {item.children.slice(0, state.expandIds.includes(item.id) ? item.children.length : 1).map(i => (
                                                 <Comment
                                                     key={i.id}
                                                     author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>}</span>}
                                                     avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
                                                     content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
-                                                    actions={renderActions(i, item.id)}
+                                                    // actions={renderActions(i, item.id)}
                                                 />
                                             ))}
                                             <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
@@ -446,7 +455,7 @@ const messageBoard = (list = []) => {
                                             )}
                                         </Comment>
                                     ))
-                                }
+                                :<Empty description="暂无留言" />}
                             </div>
                             <Pagination {...state.pagination} onChange={pageChange} onShowSizeChange={pageSizeChange} />
                         </Card>

@@ -106,19 +106,16 @@ const Header = (props) => {
 
         }
     }
-    const changeTheme = value => {
-        setTheme(value ? 'dark' : 'light');
-    };
 
     const onSearch = (value) => {
-        setContent(value)
-        const a = async (value) => {
+        console.log('value', value)
+        const Search = async (value) => {
             await axios(servicePath.getListSearch + value).then(
                 (res) => { props.searchData(res.data) }
 
             )
         }
-        a(value)
+        Search(value)
         setContent('')
     }
 
@@ -177,42 +174,6 @@ const Header = (props) => {
 
                     </Menu>
                 </Col>
-                <Col xs={24} sm={24} md={10} lg={13} xl={2}>
-                    <Popover
-                        content={<>
-                            <Card title="Blog  System Login" bordered={true} style={{ width: 400 }} >
-                                <Input
-                                    id="userName"
-                                    size="large"
-                                    placeholder="请输入你的账号"
-                                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                    onChange={(e) => { setUserName(e.target.value) }}
-                                />
-                                <br /><br />
-                                <Input.Password
-                                    id="password"
-                                    size="large"
-                                    placeholder="请输入你的密码"
-                                    prefix={<Icon type="key" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                    onChange={(e) => { setPassword(e.target.value) }}
-                                />
-                                <br /><br />
-                                <Button type="primary" size="large" block onClick={checkLogin} > 登录 </Button>
-                            </Card></>}
-                        title="请登录"
-                        trigger="click"
-
-                    >
-                        {/* <Button type="primary" style={{ 'marginTop': 5 }}>登录</Button> */}
-                    </Popover>
-                </Col>
-                {/* <Switch
-                    className="switch"
-                    checked={theme === 'dark'}
-                    onChange={changeTheme}
-                    checkedChildren="Dark"
-                    unCheckedChildren="Light"
-                /> */}
             </Row>
         </div>
     )
