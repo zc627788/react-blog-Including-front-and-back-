@@ -129,9 +129,11 @@ class MainController extends Controller {
 
     //删除留言
     async delMessage(query) {
-        let id=this.ctx.params.id
+        let id = this.ctx.params.id
+        console.log('id123123', this.ctx.params.id)
         const sql = `delete from messages where id=${id}`
         await this.app.mysql.query(sql)
+        this.ctx.body = "删除成功"
     }
 }
 

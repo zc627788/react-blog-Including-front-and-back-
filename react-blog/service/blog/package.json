@@ -15,7 +15,7 @@
         "bootstrap": "3.3.7",
         "braft-editor": "^2.3.7",
         "braft-extensions": "0.0.18",
-        "braft-utils": "^3.0.8",
+        "braft-utils": "^3.0.12",
         "draft-js-prism": "^1.0.6",
         "hexo-helper-live2d": "^3.1.1",
         "highlight.js": "^9.17.1",
@@ -24,10 +24,12 @@
         "marked": "^0.8.0",
         "next": "9.1.7",
         "prismjs": "^1.23.0",
-        "react": "^16.12.0",
+        "react": "^16.14.0",
         "react-dom": "16.12.0",
         "react-particles-js": "^3.4.1",
         "react-sticky": "^6.0.3",
-        "react-tsparticles": "^1.18.11"
+        "react-tsparticles": "^1.18.11",
+        "video.js": "^7.11.4",
+        "videojs-react-enhanced": "^0.3.0"
     }
 }

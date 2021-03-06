@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List, Row, Col, Modal, message, Button, Switch, Table, Divider, Tag,Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { List, Row, Col, Modal, message, Button, Switch, Table, Divider, Tag, Layout, Menu, Breadcrumb, Icon } from 'antd';
 import axios from 'axios'
 import servicePath from '../config/apiUrl'
 const { confirm } = Modal;
@@ -16,13 +16,13 @@ function MessageBroad(props) {
     }, [])
 
     // function
-     //删除文章的方法
-     const delArticle = (id) => {
+    //删除文章的方法
+    const delArticle = (id) => {
         confirm({
             title: '确定要删除这条评论吗?',
             content: '如果你点击OK按钮，评论将会永远被删除，无法恢复。',
             onOk() {
-                axios(servicePath.delMessage + id, { withCredentials: true }).then(
+                axios(servicePath.delMessage + id, { withCredentials: true, crossDomain: true }).then(
                     res => {
                         message.success('留言删除成功')
                         getList()

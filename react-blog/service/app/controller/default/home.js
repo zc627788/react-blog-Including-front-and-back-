@@ -30,6 +30,7 @@ class HomeController extends Controller {
         const id = this.ctx.params.id;
         const sql = 'SELECT article.id as id,' +
             'article.title as title,' +
+            'article.video as video,' +
             'article.introduce as introduce,' +
             'article.introduce as introduce,' +
             'article.praise as praise,' +

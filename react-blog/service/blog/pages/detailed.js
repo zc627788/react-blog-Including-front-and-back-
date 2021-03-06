@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import { Row, Col, Affix, Icon, Breadcrumb, Button, Comment, Avatar, Form, List, Input, Rate } from 'antd'
 import moment from 'moment';
-
+import VREPlayer from 'videojs-react-enhanced';
+import 'video.js/dist/video-js.css';
 import axios from 'axios'
 import Header from '../components/Header'
 import Author from '../components/Author'
@@ -44,8 +45,8 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 const Detailed = (props) => {
 
     // props
-    const { addTime, article_content, typeName, view_count, title } = props
-
+    const { addTime, article_content, typeName, view_count, title, video } = props
+    console.log('object', props)
 
     //state
     const [comments, setComments] = useState([{}])
@@ -78,6 +79,14 @@ const Detailed = (props) => {
     const handleChange = e => {
         setValue(e.target.value)
 
+    };
+    const playerOptions = {
+        src: 'blob:https://www.bilibili.com/6dccb47a-b55d-4c8c-a425-293641da76c0',
+        controls: true,
+        autoplay: "play",
+    };
+    const videojsOptions = {
+        fluid: true,
     };
 
 
@@ -134,6 +143,14 @@ const Detailed = (props) => {
                                 <span><Icon type="fire" /> {view_count}</span>
                             </div>
                             <div className="detailed-content" dangerouslySetInnerHTML={{ __html: html }}></div>
+                            {video == 1 ? <VREPlayer
+                                playerOptions={playerOptions}
+                                videojsOptions={videojsOptions}
+                                onReady={(player) => console.log(player)}
+                                onPlay={(e, _, second) => console.log('Play!')}
+                                onPause={(e, _, second) => console.log('Pause!')}
+                                onEnded={(e, _) => console.log('Ended!')}
+                            /> : ''}
                         </div>
                     </div>
 
