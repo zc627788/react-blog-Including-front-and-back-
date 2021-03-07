@@ -1,0 +1,116 @@
+.login-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 300px;
+  padding: 100px 40px 40px;
+  box-sizing: content-box;
+}
+.login-container .box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 1s;
+  backface-visibility: hidden;
+  color: #d3d7f7;
+  padding: 90px 40px 40px;
+  box-shadow: -15px 15px 15px rgba(0, 0, 0, 0.4);
+  transform: rotateY(180deg);
+}
+.login-container .box:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(230deg, rgba(53, 57, 74, 0), #000);
+  z-index: -1;
+}
+.login-container .box.active {
+  transform: rotateY(0deg);
+}
+.login-container .box .title {
+  height: 60px;
+  color: #d3d7f7;
+  font-size: 16px;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+.login-container .box .iconfont {
+  color: #fff;
+  opacity: .6;
+}
+.login-container .box .myInput.ant-input {
+  background-color: transparent;
+  color: #61BFFF;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  padding-right: 0;
+}
+.login-container .box .btn-box {
+  display: flex;
+  height: 42px;
+  justify-content: space-between;
+  align-items: center;
+}
+.login-container .box .btn-box .registerBtn {
+  cursor: pointer;
+  color: #D3D7F7;
+}
+.login-container .box .btn-box .registerBtn:hover {
+  color: #4FA1D9;
+}
+.login-container .box .btn-box .loginBtn {
+  cursor: pointer;
+  padding: 10px 50px;
+  border: 2px solid #4FA1D9;
+  border-radius: 50px;
+  background: transparent;
+  font-size: 11px;
+  color: #4FA1D9;
+  transition: all .2s;
+  height: 100%;
+  line-height: 1.5;
+}
+.login-container .box .btn-box .loginBtn:hover {
+  color: white;
+  background: #4FA1D9;
+}
+.login-container .box .footer {
+  position: absolute;
+  bottom: 20px;
+  left: 35px;
+  width: 250px;
+  color: #d3d7f7;
+  font-size: 10px;
+  font-weight: 600;
+}
+.login-container .box .ant-col {
+  right: 0%;
+  transition: all .3s;
+}
+.login-container .box .ant-col-pull-1 {
+  right: 4.16666667%;
+}
+.login-container .box .ant-form-explain {
+  position: absolute;
+  z-index: 99;
+  left: 110%;
+  top: 0;
+  height: 41px;
+}
+/*更改谷歌浏览器input背景*/
+.login-container .box input:-webkit-autofill,
+.login-container .box input:-webkit-autofill:hover,
+.login-container .box input:-webkit-autofill:focus,
+.login-container .box input:-webkit-autofill:active {
+  /*延迟背景颜色载入*/
+  -webkit-transition-delay: 99999s;
+  -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
+}

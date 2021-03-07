@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Login from './Login'
+import Index from './index'
 import AdminIndex from './AdminIndex'
 
 function Main() {
     return (
         <Router>
-            <Route path="/" exact component={Login} />
-            <Route path="/index" component={AdminIndex} />
+            <Route path="/" exact component={Index} />
+            <Route path="/Article" component={AdminIndex} />
         </Router>
     )
 }

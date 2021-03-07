@@ -182,17 +182,11 @@ const Home = (list) => {
         setMylist(search?.data)
     }
 
-    function findKey(obj, value, compare = (a, b) => a === b) {
-        return Object.keys(obj).find(k => compare(obj[k], value))
-    }
-
     // tabs栏切换
     const tabsChange = async (tab) => {
         const res = await axios(`${servicePath.getArticleList}${tab}`)
         setMylist(res.data.data)
         setTabLeft(tabs[tab])
-
-
     }
     // 点赞
     const changType = (e) => {
@@ -203,6 +197,7 @@ const Home = (list) => {
         const giveGood = async (id, praise) => {
             await axios(`${servicePath.giveGood}${id}/${praise}`)
         }
+        // 深拷贝,setMYlist(mylist)不会刷新页面
         const mylist2 = JSON.parse(JSON.stringify(mylist))
         mylist2.map((item) => {
             if (item.id === id) {
@@ -225,11 +220,9 @@ const Home = (list) => {
                 options={config}
                 style={{ position: "absolute" }}
             />
-
             <Head>
                 <title>Home</title>
             </Head>
-
             <Header searchData={(data) => searchData(data)} />
             <Carousel effect="fade" autoplay >
                 <div className="Carousel">
@@ -242,7 +235,6 @@ const Home = (list) => {
                     <img src="../static/img/react.png" alt="" />
                 </div>
             </Carousel>
-
             <Row className="comm-main" type="flex" justify="center">
                 <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14}  >
                     <div>
@@ -285,23 +277,17 @@ const Home = (list) => {
                                 pageSize: 4
                             }}
                         />
-
-
                     </div>
                 </Col>
-
                 <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4}>
                     <Author />
                     <Advert />
                 </Col>
             </Row>
             <Footer />
-
-
         </div>
     )
 }
-
 Home.getInitialProps = async () => {
     const res = await axios(servicePath.getArticleList + 'addTime')
     return res.data

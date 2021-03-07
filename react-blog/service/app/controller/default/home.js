@@ -18,7 +18,7 @@ class HomeController extends Controller {
             "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime," +
             'article.view_count as view_count ,' +
             '.type.typeName as typeName ' +
-            `FROM article LEFT JOIN type ON article.type_id = type.Id order by ${tab||'addTime'}  DESC`;
+            `FROM article LEFT JOIN type ON article.type_id = type.Id order by ${tab || 'addTime'}  DESC`;
         const results = await this.app.mysql.query(sql);
         this.ctx.body = {
             data: results,
@@ -69,7 +69,7 @@ class HomeController extends Controller {
         const result = await this.app.mysql.query(sql);
         this.ctx.body = { data: result };
     }
-    // 视频查询
+    // 视频查询(未完成)
     // async  giveGoodVideo() {
     //     const id = this.ctx.params.id;
     //     const { id, typeid, praise } = this.ctx.params
@@ -110,7 +110,7 @@ class HomeController extends Controller {
         this.ctx.body = { data: result };
     }
 
-   
+
     //获取留言列表
     async getMessages(query) {
         const { current = 0, pageSize = 10 } = query
@@ -173,8 +173,8 @@ class HomeController extends Controller {
 
     //回复留言
     async reply() {
-        const { content, type, pid, replyUser,targetName } = this.ctx.request.body
-        
+        const { content, type, pid, replyUser, targetName } = this.ctx.request.body
+
         let insertObj = {
             type: type || 0,
             pid: pid || -1,

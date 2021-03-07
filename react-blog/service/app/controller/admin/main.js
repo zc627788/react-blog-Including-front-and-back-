@@ -18,12 +18,41 @@ class MainController extends Controller {
             //登录成功,进行session缓存
             let openId = new Date().getTime()
             this.ctx.session.openId = { 'openId': openId }
-            console.log('object', this.ctx.session.openId)
             this.ctx.body = { 'data': '登录成功', 'openId': openId }
             return this.ctx.session.openId
 
         } else {
             this.ctx.body = { data: '登录失败' }
+        }
+    }
+
+    // 判断用户名是否存在
+    async checkName(registerUsername) {
+        let userName = this.ctx.params.value
+        const sql = " SELECT userName FROM admin_user WHERE userName = " + ` '${userName || registerUsername}' `
+        const res = await this.app.mysql.query(sql)
+        this.ctx.body = { num: res.length }
+        return { data: { num: res.length } }
+    }
+
+    //注册
+    async  register() {
+        const { username, password } = this.ctx.request.body
+        if (!username || !password) {
+            this.ctx.body = { message: '请输入账号或者密码' }
+        }
+        const checkNameResult = await this.checkName(username)
+        if (checkNameResult.data.num) {
+            this.ctx.body = { message: '用户名已存在' }
+            return
+        }
+        const sql = `insert into admin_user (userName, password) values('${username}', '${password}')`
+        const res = await this.app.mysql.query(sql)
+        if (res.affectedRows) {
+            this.ctx.body = { message: '注册成功' }
+
+        } else {
+            this.ctx.body = { message: '注册失败' }
         }
     }
 
@@ -50,7 +79,6 @@ class MainController extends Controller {
         const tmpArticle = this.ctx.request.body
         const result = await this.app.mysql.update('article', tmpArticle);
         const updateSuccess = result.affectedRows === 1;
-        // console.log(updateSuccess)
         this.ctx.body = {
             isScuccess: updateSuccess
         }
@@ -128,9 +156,8 @@ class MainController extends Controller {
     }
 
     //删除留言
-    async delMessage(query) {
+    async delMessage() {
         let id = this.ctx.params.id
-        console.log('id123123', this.ctx.params.id)
         const sql = `delete from messages where id=${id}`
         await this.app.mysql.query(sql)
         this.ctx.body = "删除成功"

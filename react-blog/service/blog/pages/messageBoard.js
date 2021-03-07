@@ -3,7 +3,6 @@ import Head from 'next/head'
 import { Row, Col, Icon, Breadcrumb, Comment, Divider, Button, Card, message, Tooltip, Input, notification, Tag, Spin, Pagination, Empty } from 'antd'
 import moment from 'moment'
 import BraftEditor from 'braft-editor'
-
 import { ContentUtils } from 'braft-utils'
 import CodeHighlighter from 'braft-extensions/dist/code-highlighter'
 import 'braft-editor/dist/index.css'
@@ -19,7 +18,6 @@ import Particles from "react-tsparticles";
 
 
 BraftEditor.use(CodeHighlighter({}))
-
 const TextArea = Input.TextArea
 
 function createMarkup(html) {
@@ -103,6 +101,7 @@ const messageBoard = (list = []) => {
 
 
     // function
+    // 获取留言
     const getMessages = async (page = 1, pageSize = 10) => {
         setState({
             ...state,
@@ -176,9 +175,8 @@ const messageBoard = (list = []) => {
         const res = await axios.post(`${servicePath.sendMessage}`, {
             username: state.replyUser,
             content: htmlContent,
- 
+
         })
-        console.log('res', res)
         if (res.status === 200) {
             message.success('留言成功')
             getMessages()
@@ -187,11 +185,8 @@ const messageBoard = (list = []) => {
         }
     }
 
-    /**
-     * 展开回复的textarea
-     * @param {object} item 当前回复的对象
-     * @param {number} pid  回复的父级id
-     */
+
+    //展开回复的textarea
     const showReply = (item, pid) => {
         setState({
             ...state,
@@ -215,9 +210,9 @@ const messageBoard = (list = []) => {
 
     //确认回复
     const confirmReply = async (item) => {
-        console.log('item',item.userName)
-        const {replyContent,replyUser} = state
-        if(!replyUser){
+        console.log('item', item.userName)
+        const { replyContent, replyUser } = state
+        if (!replyUser) {
             message.warning('请输入用户名')
             return
         }
@@ -230,7 +225,7 @@ const messageBoard = (list = []) => {
             type: 1,
             pid: state.replyPid,
             replyUser: state.replyUser,
-            targetName:item.userName
+            targetName: item.userName
         }
         const res = await axios.post(`${servicePath.reply}`, param)
         if (res.status === 200) {
@@ -249,28 +244,6 @@ const messageBoard = (list = []) => {
     const getRandomColor = function () {
         return '#' + Math.floor(Math.random() * 16777215).toString(16);
     }
-
-    //删除回复
-    // const onDelete = async (item) => {
-    //     Modal.confirm({
-    //         title: '提示',
-    //         content: `确认删除该留言${item.children && item.children.length ? '及其底下的回复' : ''}吗？`,
-    //         onOk: async () => {
-    //             const res = await json.post('/message/delete', {
-    //                 id: item.id
-    //             })
-    //             if (res.status === 0) {
-    //                 notification.success({
-    //                     message: '删除成功',
-    //                     description: res.message,
-    //                     duration: 3
-    //                 });
-    //                 const { current, pageSize } = state.pagination
-    //                 getMessages(current, pageSize)
-    //             }
-    //         },
-    //     });
-    // }
 
     //回复输入框的onChange
     const handleReplyChange = (e) => {
@@ -331,18 +304,6 @@ const messageBoard = (list = []) => {
                 </Tooltip>
             </span>
         ]
-        //只有小可爱或者本人才可删除
-        // if (props.user.isAdmin || props.user.id === item.userId) {
-        //     actions.splice(2, 0, (
-        //         <span style={styles.actionItem}>
-        //             <Tooltip title="删除">
-        //                 <span onClick={() => onDelete(item)}>
-        //                     <Icon type="delete" />&nbsp;删除
-        //                 </span>
-        //             </Tooltip>
-        //         </span>
-        //     ))
-        // }
         return actions
     }
 
@@ -408,7 +369,7 @@ const messageBoard = (list = []) => {
                             {console.log('object', state.messages)}
                             <div className='message-list-box'>
                                 {
-                                     state.messages&&state.messages.length!==0 ? state.messages.map((item, index) => (
+                                    state.messages && state.messages.length !== 0 ? state.messages.map((item, index) => (
                                         <Comment
                                             key={item.id}
                                             author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>}</span>}
@@ -424,7 +385,7 @@ const messageBoard = (list = []) => {
                                                     author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color={getRandomColor()}>小可爱</Tag>}</span>}
                                                     avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
                                                     content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
-                                                    // actions={renderActions(i, item.id)}
+                                                // actions={renderActions(i, item.id)}
                                                 />
                                             ))}
                                             <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
@@ -455,7 +416,7 @@ const messageBoard = (list = []) => {
                                             )}
                                         </Comment>
                                     ))
-                                :<Empty description="暂无留言" />}
+                                        : <Empty description="暂无留言" />}
                             </div>
                             <Pagination {...state.pagination} onChange={pageChange} onShowSizeChange={pageSizeChange} />
                         </Card>

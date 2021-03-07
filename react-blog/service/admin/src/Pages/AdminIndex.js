@@ -19,11 +19,11 @@ function AdminIndex(props) {
     const handleClickArticle = e => {
         if (e.key === 'addArticle') {
             console.log('object', e)
-            props.history.push('/index/add')
-        } else if(e.key === 'articleList') {
-            props.history.push('/index/list')
-        } else{
-            props.history.push('/index/message')
+            props.history.push('/Article/add')
+        } else if (e.key === 'articleList') {
+            props.history.push('/Article/list')
+        } else {
+            props.history.push('/Article/message')
 
         }
     }
@@ -47,11 +47,11 @@ function AdminIndex(props) {
                         <Menu.Item key="addArticle"><Icon type="message" />添加文章</Menu.Item>
                         <Menu.Item key="articleList"><Icon type="like" />文章列表</Menu.Item>
                         <Menu.Item key="messageBroad">
-                        <Icon type="file" />
-                        <span>留言管理</span>
-                    </Menu.Item>
+                            <Icon type="file" />
+                            <span>留言管理</span>
+                        </Menu.Item>
                     </SubMenu>
-          
+
                 </Menu>
             </Sider>
             <Layout>
@@ -63,11 +63,11 @@ function AdminIndex(props) {
                     </Breadcrumb>
                     <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
                         <div>
-                            <Route path="/index/" exact component={AddArticle} />
-                            <Route path="/index/add/" exact component={AddArticle} />
-                            <Route path="/index/add/:id" exact component={AddArticle} />
-                            <Route path="/index/list/" exact component={ArticleList} />
-                            <Route path="/index/message" exact component={MessageBroad} />
+                            <Route path="/Article" exact component={AddArticle} />
+                            <Route path="/Article/add/" exact component={AddArticle} />
+                            <Route path="/Article/add/:id" exact component={AddArticle} />
+                            <Route path="/Article/list/" exact component={ArticleList} />
+                            <Route path="/Article/message" exact component={MessageBroad} />
 
                         </div>
                     </div>

@@ -19,6 +19,7 @@ import '../static/style/pages/detailed.css'
 
 const { TextArea } = Input;
 
+//评论
 const CommentList = ({ comments }) => (
     <List
         dataSource={comments}
@@ -56,6 +57,7 @@ const Detailed = (props) => {
     const renderer = new marked.Renderer();
 
     // function
+    // 提交评论
     const handleSubmit = () => {
         if (!value) {
             return;
@@ -80,6 +82,7 @@ const Detailed = (props) => {
         setValue(e.target.value)
 
     };
+    //视频
     const playerOptions = {
         src: 'blob:https://www.bilibili.com/6dccb47a-b55d-4c8c-a425-293641da76c0',
         controls: true,
@@ -89,7 +92,7 @@ const Detailed = (props) => {
         fluid: true,
     };
 
-
+    //markdown文本
     marked.setOptions({
         renderer: renderer,
         gfm: true,

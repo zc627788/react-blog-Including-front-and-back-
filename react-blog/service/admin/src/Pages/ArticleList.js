@@ -50,7 +50,7 @@ function ArticleList(props) {
 
     //修改文章
     const updateArticle = (id, checked) => {
-        props.history.push('/index/add/' + id)
+        props.history.push('/Article/add/' + id)
     }
 
     return (
@@ -98,7 +98,7 @@ function ArticleList(props) {
                             </Col>
 
                             <Col span={4}>
-                                <Button type="primary" onClick={()=>{updateArticle(item.id)}}>修改</Button>&nbsp;
+                                <Button type="primary" onClick={() => { updateArticle(item.id) }}>修改</Button>&nbsp;
                                 <Button onClick={() => { delArticle(item.id) }} >删除 </Button>
                             </Col>
                         </Row>

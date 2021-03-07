@@ -159,9 +159,6 @@ const video = (list) => {
         setMylist(list.data)
     }, [])
 
-    function findKey(obj, value, compare = (a, b) => a === b) {
-        return Object.keys(obj).find(k => compare(obj[k], value))
-    }
 
 
     // function
@@ -178,6 +175,7 @@ const video = (list) => {
         setTabLeft(tabs[tab])
 
     }
+
     // 点赞
     const changType = (e) => {
         const { id, praise } = e.target.value
@@ -191,9 +189,13 @@ const video = (list) => {
             setMylist(res.data.data)
         }
         giveGood(id, praise)
-
-
     }
+
+    // 找 tabs对象的key
+    function findKey(obj, value, compare = (a, b) => a === b) {
+        return Object.keys(obj).find(k => compare(obj[k], value))
+    }
+
     return (
         <>
             <Head>
@@ -259,7 +261,6 @@ const video = (list) => {
                 </Col>
             </Row>
             <Footer />
-
         </>
     )
 
